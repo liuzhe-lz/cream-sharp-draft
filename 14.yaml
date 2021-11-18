@@ -1,0 +1,667 @@
+ChildNet:
+  conv_stem:
+    name: Conv2d
+    args: [3, 16]
+    kwargs:
+      kernel_size: 3
+      stride: 2
+      padding: 1
+      bias: false
+  bn1:
+    name: BatchNorm2d
+    args: [16]
+    kwargs:
+      eps: 1e-05
+      momentum: 0.1
+      affine: true
+      track_running_stats: true
+  act1:
+    name: Swish
+    args: []
+    kwargs: {}
+  blocks:
+    - - name: DepthwiseSeparableConv
+        args:
+          conv_dw:
+            name: Conv2d
+            args: [16, 16]
+            kwargs:
+              kernel_size: 3
+              stride: 1
+              padding: 1
+              groups: 16
+              bias: false
+          bn1:
+            name: BatchNorm2d
+            args: [16]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act1:
+            name: Swish
+            args: []
+            kwargs: {}
+          se:
+            name: SqueezeExcite
+            args:
+              conv_reduce:
+                name: Conv2d
+                args: [16, 8]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+              act1:
+                name: ReLU
+                args: []
+                kwargs:
+                  inplace: true
+              conv_expand:
+                name: Conv2d
+                args: [8, 16]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+          conv_pw:
+            name: Conv2d
+            args: [16, 16]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn2:
+            name: BatchNorm2d
+            args: [16]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act2:
+            name: Identity
+            args: []
+            kwargs: {}
+    - - name: InvertedResidual
+        args:
+          conv_pw:
+            name: Conv2d
+            args: [16, 64]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn1:
+            name: BatchNorm2d
+            args: [64]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act1:
+            name: Swish
+            args: []
+            kwargs: {}
+          conv_dw:
+            name: Conv2d
+            args: [64, 64]
+            kwargs:
+              kernel_size: 3
+              stride: 2
+              padding: 1
+              groups: 64
+              bias: false
+          bn2:
+            name: BatchNorm2d
+            args: [64]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act2:
+            name: Swish
+            args: []
+            kwargs: {}
+          se:
+            name: SqueezeExcite
+            args:
+              conv_reduce:
+                name: Conv2d
+                args: [64, 16]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+              act1:
+                name: ReLU
+                args: []
+                kwargs:
+                  inplace: true
+              conv_expand:
+                name: Conv2d
+                args: [16, 64]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+          conv_pwl:
+            name: Conv2d
+            args: [64, 24]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn3:
+            name: BatchNorm2d
+            args: [24]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+    - - name: InvertedResidual
+        args:
+          conv_pw:
+            name: Conv2d
+            args: [24, 144]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn1:
+            name: BatchNorm2d
+            args: [144]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act1:
+            name: Swish
+            args: []
+            kwargs: {}
+          conv_dw:
+            name: Conv2d
+            args: [144, 144]
+            kwargs:
+              kernel_size: 5
+              stride: 2
+              padding: 2
+              groups: 144
+              bias: false
+          bn2:
+            name: BatchNorm2d
+            args: [144]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act2:
+            name: Swish
+            args: []
+            kwargs: {}
+          se:
+            name: SqueezeExcite
+            args:
+              conv_reduce:
+                name: Conv2d
+                args: [144, 40]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+              act1:
+                name: ReLU
+                args: []
+                kwargs:
+                  inplace: true
+              conv_expand:
+                name: Conv2d
+                args: [40, 144]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+          conv_pwl:
+            name: Conv2d
+            args: [144, 40]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn3:
+            name: BatchNorm2d
+            args: [40]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+      - name: InvertedResidual
+        args:
+          conv_pw:
+            name: Conv2d
+            args: [40, 240]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn1:
+            name: BatchNorm2d
+            args: [240]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act1:
+            name: Swish
+            args: []
+            kwargs: {}
+          conv_dw:
+            name: Conv2d
+            args: [240, 240]
+            kwargs:
+              kernel_size: 5
+              stride: 1
+              padding: 2
+              groups: 240
+              bias: false
+          bn2:
+            name: BatchNorm2d
+            args: [240]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act2:
+            name: Swish
+            args: []
+            kwargs: {}
+          se:
+            name: SqueezeExcite
+            args:
+              conv_reduce:
+                name: Conv2d
+                args: [240, 64]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+              act1:
+                name: ReLU
+                args: []
+                kwargs:
+                  inplace: true
+              conv_expand:
+                name: Conv2d
+                args: [64, 240]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+          conv_pwl:
+            name: Conv2d
+            args: [240, 40]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn3:
+            name: BatchNorm2d
+            args: [40]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+    - - name: InvertedResidual
+        args:
+          conv_pw:
+            name: Conv2d
+            args: [40, 240]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn1:
+            name: BatchNorm2d
+            args: [240]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act1:
+            name: Swish
+            args: []
+            kwargs: {}
+          conv_dw:
+            name: Conv2d
+            args: [240, 240]
+            kwargs:
+              kernel_size: 5
+              stride: 2
+              padding: 2
+              groups: 240
+              bias: false
+          bn2:
+            name: BatchNorm2d
+            args: [240]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act2:
+            name: Swish
+            args: []
+            kwargs: {}
+          se:
+            name: SqueezeExcite
+            args:
+              conv_reduce:
+                name: Conv2d
+                args: [240, 64]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+              act1:
+                name: ReLU
+                args: []
+                kwargs:
+                  inplace: true
+              conv_expand:
+                name: Conv2d
+                args: [64, 240]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+          conv_pwl:
+            name: Conv2d
+            args: [240, 80]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn3:
+            name: BatchNorm2d
+            args: [80]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+      - name: InvertedResidual
+        args:
+          conv_pw:
+            name: Conv2d
+            args: [80, 480]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn1:
+            name: BatchNorm2d
+            args: [480]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act1:
+            name: Swish
+            args: []
+            kwargs: {}
+          conv_dw:
+            name: Conv2d
+            args: [480, 480]
+            kwargs:
+              kernel_size: 5
+              stride: 1
+              padding: 2
+              groups: 480
+              bias: false
+          bn2:
+            name: BatchNorm2d
+            args: [480]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act2:
+            name: Swish
+            args: []
+            kwargs: {}
+          se:
+            name: SqueezeExcite
+            args:
+              conv_reduce:
+                name: Conv2d
+                args: [480, 120]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+              act1:
+                name: ReLU
+                args: []
+                kwargs:
+                  inplace: true
+              conv_expand:
+                name: Conv2d
+                args: [120, 480]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+          conv_pwl:
+            name: Conv2d
+            args: [480, 80]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn3:
+            name: BatchNorm2d
+            args: [80]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+    - - name: InvertedResidual
+        args:
+          conv_pw:
+            name: Conv2d
+            args: [80, 480]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn1:
+            name: BatchNorm2d
+            args: [480]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act1:
+            name: Swish
+            args: []
+            kwargs: {}
+          conv_dw:
+            name: Conv2d
+            args: [480, 480]
+            kwargs:
+              kernel_size: 3
+              stride: 1
+              padding: 1
+              groups: 480
+              bias: false
+          bn2:
+            name: BatchNorm2d
+            args: [480]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act2:
+            name: Swish
+            args: []
+            kwargs: {}
+          se:
+            name: SqueezeExcite
+            args:
+              conv_reduce:
+                name: Conv2d
+                args: [480, 120]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+              act1:
+                name: ReLU
+                args: []
+                kwargs:
+                  inplace: true
+              conv_expand:
+                name: Conv2d
+                args: [120, 480]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+          conv_pwl:
+            name: Conv2d
+            args: [480, 96]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn3:
+            name: BatchNorm2d
+            args: [96]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+    - - name: InvertedResidual
+        args:
+          conv_pw:
+            name: Conv2d
+            args: [96, 576]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn1:
+            name: BatchNorm2d
+            args: [576]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act1:
+            name: Swish
+            args: []
+            kwargs: {}
+          conv_dw:
+            name: Conv2d
+            args: [576, 576]
+            kwargs:
+              kernel_size: 5
+              stride: 2
+              padding: 2
+              groups: 576
+              bias: false
+          bn2:
+            name: BatchNorm2d
+            args: [576]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act2:
+            name: Swish
+            args: []
+            kwargs: {}
+          se:
+            name: SqueezeExcite
+            args:
+              conv_reduce:
+                name: Conv2d
+                args: [576, 144]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+              act1:
+                name: ReLU
+                args: []
+                kwargs:
+                  inplace: true
+              conv_expand:
+                name: Conv2d
+                args: [144, 576]
+                kwargs:
+                  kernel_size: 1
+                  stride: 1
+          conv_pwl:
+            name: Conv2d
+            args: [576, 192]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn3:
+            name: BatchNorm2d
+            args: [192]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+    - - name: ConvBnAct
+        args:
+          conv:
+            name: Conv2d
+            args: [192, 320]
+            kwargs:
+              kernel_size: 1
+              stride: 1
+              bias: false
+          bn1:
+            name: BatchNorm2d
+            args: [320]
+            kwargs:
+              eps: 1e-05
+              momentum: 0.1
+              affine: true
+              track_running_stats: true
+          act1:
+            name: Swish
+            args: []
+            kwargs: {}
+  global_pool:
+    name: SelectAdaptivePool2d
+    args: []
+    kwargs:
+      pool_type: avg
+      flatten: false
+  conv_head:
+    name: Conv2d
+    args: [320, 1280]
+    kwargs:
+      kernel_size: 1
+      stride: 1
+  act2:
+    name: Swish
+    args: []
+    kwargs: {}
+  classifier:
+    name: Linear
+    args: []
+    kwargs:
+      in_features: 1280
+      out_features: 1000
+      bias: true
