@@ -1,0 +1,2311 @@
+{
+    "name": "root",
+    "type": "ChildNet",
+    "children": {
+        "conv_stem": {
+            "name": "root.conv_stem",
+            "type": "Conv2d",
+            "args": [
+                3,
+                16
+            ],
+            "kwargs": {
+                "kernel_size": 3,
+                "stride": 2,
+                "padding": 1,
+                "bias": false,
+                "dilation": 1,
+                "groups": 1
+            }
+        },
+        "bn1": {
+            "name": "root.bn1",
+            "type": "BatchNorm2d",
+            "args": [
+                16
+            ],
+            "kwargs": {
+                "eps": 1e-05,
+                "momentum": 0.1,
+                "affine": true,
+                "track_running_stats": true
+            }
+        },
+        "act1": {
+            "name": "root.act1",
+            "type": "Swish"
+        },
+        "blocks": {
+            "name": "root.blocks",
+            "type": "Sequential",
+            "children": [
+                {
+                    "name": "root.blocks.0",
+                    "type": "Sequential",
+                    "children": [
+                        {
+                            "name": "root.blocks.0.0",
+                            "type": "DepthwiseSeparableConv",
+                            "children": {
+                                "conv_dw": {
+                                    "name": "root.blocks.0.0.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        16,
+                                        16
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 3,
+                                        "stride": 1,
+                                        "padding": 1,
+                                        "groups": 16,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.0.0.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        16
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.0.0.act1",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.0.0.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.0.0.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.0.0.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                16,
+                                                8
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.0.0.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.0.0.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                8,
+                                                16
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pw": {
+                                    "name": "root.blocks.0.0.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        16,
+                                        16
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.0.0.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        16
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.0.0.act2",
+                                    "type": "Identity"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "root.blocks.1",
+                    "type": "Sequential",
+                    "children": [
+                        {
+                            "name": "root.blocks.1.0",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.1.0.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        16,
+                                        64
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.1.0.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        64
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.1.0.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.1.0.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        64,
+                                        64
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 3,
+                                        "stride": 2,
+                                        "padding": 1,
+                                        "groups": 64,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.1.0.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        64
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.1.0.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.1.0.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.1.0.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.1.0.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                64,
+                                                16
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.1.0.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.1.0.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                16,
+                                                64
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.1.0.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        64,
+                                        24
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.1.0.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        24
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "root.blocks.2",
+                    "type": "Sequential",
+                    "children": [
+                        {
+                            "name": "root.blocks.2.0",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.2.0.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        24,
+                                        144
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.2.0.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        144
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.2.0.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.2.0.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        144,
+                                        144
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 2,
+                                        "padding": 2,
+                                        "groups": 144,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.2.0.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        144
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.2.0.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.2.0.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.2.0.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.2.0.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                144,
+                                                40
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.2.0.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.2.0.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                40,
+                                                144
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.2.0.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        144,
+                                        40
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.2.0.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        40
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "root.blocks.2.1",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.2.1.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        40,
+                                        240
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.2.1.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        240
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.2.1.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.2.1.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        240,
+                                        240
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 1,
+                                        "padding": 2,
+                                        "groups": 240,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.2.1.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        240
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.2.1.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.2.1.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.2.1.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.2.1.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                240,
+                                                64
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.2.1.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.2.1.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                64,
+                                                240
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.2.1.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        240,
+                                        40
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.2.1.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        40
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "root.blocks.3",
+                    "type": "Sequential",
+                    "children": [
+                        {
+                            "name": "root.blocks.3.0",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.3.0.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        40,
+                                        240
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.3.0.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        240
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.3.0.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.3.0.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        240,
+                                        240
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 2,
+                                        "padding": 2,
+                                        "groups": 240,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.3.0.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        240
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.3.0.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.3.0.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.3.0.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.3.0.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                240,
+                                                64
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.3.0.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.3.0.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                64,
+                                                240
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.3.0.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        240,
+                                        80
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.3.0.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        80
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "root.blocks.3.1",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.3.1.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        80,
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.3.1.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.3.1.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.3.1.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        480,
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 3,
+                                        "stride": 1,
+                                        "padding": 1,
+                                        "groups": 480,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.3.1.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.3.1.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.3.1.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.3.1.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.3.1.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                480,
+                                                120
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.3.1.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.3.1.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                120,
+                                                480
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.3.1.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        480,
+                                        80
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.3.1.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        80
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "root.blocks.3.2",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.3.2.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        80,
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.3.2.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.3.2.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.3.2.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        480,
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 1,
+                                        "padding": 2,
+                                        "groups": 480,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.3.2.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.3.2.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.3.2.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.3.2.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.3.2.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                480,
+                                                120
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.3.2.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.3.2.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                120,
+                                                480
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.3.2.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        480,
+                                        80
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.3.2.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        80
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "root.blocks.4",
+                    "type": "Sequential",
+                    "children": [
+                        {
+                            "name": "root.blocks.4.0",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.4.0.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        80,
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.4.0.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.4.0.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.4.0.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        480,
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 1,
+                                        "padding": 2,
+                                        "groups": 480,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.4.0.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        480
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.4.0.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.4.0.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.4.0.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.4.0.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                480,
+                                                120
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.4.0.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.4.0.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                120,
+                                                480
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.4.0.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        480,
+                                        96
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.4.0.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        96
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "root.blocks.4.1",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.4.1.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        96,
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.4.1.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.4.1.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.4.1.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        576,
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 1,
+                                        "padding": 2,
+                                        "groups": 576,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.4.1.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.4.1.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.4.1.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.4.1.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.4.1.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                576,
+                                                144
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.4.1.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.4.1.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                144,
+                                                576
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.4.1.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        576,
+                                        96
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.4.1.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        96
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "root.blocks.4.2",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.4.2.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        96,
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.4.2.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.4.2.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.4.2.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        576,
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 1,
+                                        "padding": 2,
+                                        "groups": 576,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.4.2.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.4.2.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.4.2.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.4.2.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.4.2.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                576,
+                                                144
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.4.2.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.4.2.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                144,
+                                                576
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.4.2.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        576,
+                                        96
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.4.2.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        96
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "root.blocks.4.3",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.4.3.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        96,
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.4.3.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.4.3.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.4.3.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        576,
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 1,
+                                        "padding": 2,
+                                        "groups": 576,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.4.3.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.4.3.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.4.3.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.4.3.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.4.3.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                576,
+                                                144
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.4.3.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.4.3.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                144,
+                                                576
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.4.3.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        576,
+                                        96
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.4.3.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        96
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "root.blocks.5",
+                    "type": "Sequential",
+                    "children": [
+                        {
+                            "name": "root.blocks.5.0",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.5.0.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        96,
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.5.0.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.5.0.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.5.0.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        576,
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 2,
+                                        "padding": 2,
+                                        "groups": 576,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.5.0.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        576
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.5.0.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.5.0.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.5.0.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.5.0.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                576,
+                                                144
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.5.0.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.5.0.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                144,
+                                                576
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.5.0.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        576,
+                                        192
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.5.0.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        192
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "root.blocks.5.1",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.5.1.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        192,
+                                        1152
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.5.1.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        1152
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.5.1.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.5.1.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        1152,
+                                        1152
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 1,
+                                        "padding": 2,
+                                        "groups": 1152,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.5.1.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        1152
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.5.1.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.5.1.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.5.1.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.5.1.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                1152,
+                                                288
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.5.1.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.5.1.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                288,
+                                                1152
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.5.1.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        1152,
+                                        192
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.5.1.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        192
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "root.blocks.5.2",
+                            "type": "InvertedResidual",
+                            "children": {
+                                "conv_pw": {
+                                    "name": "root.blocks.5.2.conv_pw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        192,
+                                        1152
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.5.2.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        1152
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.5.2.act1",
+                                    "type": "Swish"
+                                },
+                                "conv_dw": {
+                                    "name": "root.blocks.5.2.conv_dw",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        1152,
+                                        1152
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 5,
+                                        "stride": 1,
+                                        "padding": 2,
+                                        "groups": 1152,
+                                        "bias": false,
+                                        "dilation": 1
+                                    }
+                                },
+                                "bn2": {
+                                    "name": "root.blocks.5.2.bn2",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        1152
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act2": {
+                                    "name": "root.blocks.5.2.act2",
+                                    "type": "Swish"
+                                },
+                                "se": {
+                                    "name": "root.blocks.5.2.se",
+                                    "type": "SqueezeExcite",
+                                    "children": {
+                                        "avg_pool": {
+                                            "name": "root.blocks.5.2.se.avg_pool",
+                                            "type": "AdaptiveAvgPool2d",
+                                            "args": [],
+                                            "kwargs": {
+                                                "output_size": 1
+                                            }
+                                        },
+                                        "conv_reduce": {
+                                            "name": "root.blocks.5.2.se.conv_reduce",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                1152,
+                                                288
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        },
+                                        "act1": {
+                                            "name": "root.blocks.5.2.se.act1",
+                                            "type": "ReLU",
+                                            "args": [],
+                                            "kwargs": {
+                                                "inplace": true
+                                            }
+                                        },
+                                        "conv_expand": {
+                                            "name": "root.blocks.5.2.se.conv_expand",
+                                            "type": "Conv2d",
+                                            "args": [
+                                                288,
+                                                1152
+                                            ],
+                                            "kwargs": {
+                                                "kernel_size": 1,
+                                                "stride": 1,
+                                                "dilation": 1,
+                                                "padding": 0,
+                                                "groups": 1,
+                                                "bias": false
+                                            }
+                                        }
+                                    }
+                                },
+                                "conv_pwl": {
+                                    "name": "root.blocks.5.2.conv_pwl",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        1152,
+                                        192
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn3": {
+                                    "name": "root.blocks.5.2.bn3",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        192
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "root.blocks.6",
+                    "type": "Sequential",
+                    "children": [
+                        {
+                            "name": "root.blocks.6.0",
+                            "type": "ConvBnAct",
+                            "children": {
+                                "conv": {
+                                    "name": "root.blocks.6.0.conv",
+                                    "type": "Conv2d",
+                                    "args": [
+                                        192,
+                                        320
+                                    ],
+                                    "kwargs": {
+                                        "kernel_size": 1,
+                                        "stride": 1,
+                                        "bias": false,
+                                        "dilation": 1,
+                                        "padding": 0,
+                                        "groups": 1
+                                    }
+                                },
+                                "bn1": {
+                                    "name": "root.blocks.6.0.bn1",
+                                    "type": "BatchNorm2d",
+                                    "args": [
+                                        320
+                                    ],
+                                    "kwargs": {
+                                        "eps": 1e-05,
+                                        "momentum": 0.1,
+                                        "affine": true,
+                                        "track_running_stats": true
+                                    }
+                                },
+                                "act1": {
+                                    "name": "root.blocks.6.0.act1",
+                                    "type": "Swish"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "global_pool": {
+            "name": "root.global_pool",
+            "type": "SelectAdaptivePool2d",
+            "children": {
+                "pool": {
+                    "name": "root.global_pool.pool",
+                    "type": "AdaptiveAvgPool2d",
+                    "args": [],
+                    "kwargs": {
+                        "output_size": 1
+                    }
+                }
+            }
+        },
+        "conv_head": {
+            "name": "root.conv_head",
+            "type": "Conv2d",
+            "args": [
+                320,
+                1280
+            ],
+            "kwargs": {
+                "kernel_size": 1,
+                "stride": 1,
+                "dilation": 1,
+                "padding": 0,
+                "groups": 1,
+                "bias": false
+            }
+        },
+        "act2": {
+            "name": "root.act2",
+            "type": "Swish"
+        },
+        "classifier": {
+            "name": "root.classifier",
+            "type": "Linear",
+            "args": [],
+            "kwargs": {
+                "in_features": 1280,
+                "out_features": 1000,
+                "bias": true
+            }
+        }
+    }
+}
